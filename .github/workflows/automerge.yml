@@ -1,0 +1,24 @@
+name: Merge Dev into Staging
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  merge-to-staging:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # Fetch all history for all branches and tags
+
+    - name: Merge dev into staging
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git fetch origin
+        git checkout staging
+        git merge --no-ff dev -m "Automerge dev into staging"
+        git push origin staging
